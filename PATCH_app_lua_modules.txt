@@ -1,0 +1,50 @@
+# Patch: components/common/app_claw/app_lua_modules.c
+#
+# Tambahkan blok berikut setelah blok #if CONFIG_APP_CLAW_LUA_MODULE_BLE_HID
+# (di bagian include dan di bagian entry table).
+#
+# ─── SECTION 1: Include ─────────────────────────────────────────────────────
+# Lokasi: setelah baris:
+#   #include "lua_module_ble_hid.h"
+#   #endif
+#
+# Tambahkan:
+
+#if CONFIG_APP_CLAW_LUA_MODULE_USB_HID
+#include "lua_module_usb_hid.h"
+#endif
+
+# ─── SECTION 2: Register wrapper function ────────────────────────────────────
+# Lokasi: setelah blok app_lua_register_ble_hid(), sebelum app_lua_register_camera()
+#
+# Tambahkan:
+
+#if CONFIG_APP_CLAW_LUA_MODULE_USB_HID
+static esp_err_t app_lua_register_usb_hid(const char *fatfs_base_path)
+{
+    (void)fatfs_base_path;
+    return lua_module_usb_hid_register();
+}
+#endif
+
+# ─── SECTION 3: Entry table ─────────────────────────────────────────────────
+# Lokasi: dalam s_lua_module_entries[], setelah baris:
+#   { "ble_hid", "BLE HID", app_lua_register_ble_hid },
+#   #endif
+#
+# Tambahkan:
+
+#if CONFIG_APP_CLAW_LUA_MODULE_USB_HID
+    { "usb_hid", "USB HID", app_lua_register_usb_hid },
+#endif
+
+# ─── SECTION 4: Info table ──────────────────────────────────────────────────
+# Lokasi: dalam s_lua_module_infos[], setelah baris:
+#   { "ble_hid", "BLE HID" },
+#   #endif
+#
+# Tambahkan:
+
+#if CONFIG_APP_CLAW_LUA_MODULE_USB_HID
+    { "usb_hid", "USB HID" },
+#endif

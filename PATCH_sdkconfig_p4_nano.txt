@@ -1,0 +1,20 @@
+# Patch: application/edge_agent/boards/waveshare/waveshare_esp32_p4_nano/sdkconfig.defaults.board
+#
+# Tambahkan di akhir file:
+
+#
+# USB Host Configuration (required for lua_module_usb_hid)
+#
+CONFIG_USB_HOST_ENABLED=y
+
+# USB HID host driver
+CONFIG_USB_HOST_HID_ENABLED=y
+
+# Stack size untuk USB host task (default mungkin terlalu kecil)
+CONFIG_USB_HOST_TASK_STACK_SIZE=4096
+
+# Aktifkan esp_hid host support
+CONFIG_ESP_HIDH_ENABLED=y
+CONFIG_ESP_HID_BLUEDROID_ENABLED=n
+CONFIG_ESP_HID_NIMBLE_ENABLED=n
+# USB HID tidak butuh BT, hanya USB transport
